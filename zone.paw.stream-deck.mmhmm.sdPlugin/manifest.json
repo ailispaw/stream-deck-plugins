@@ -1,0 +1,50 @@
+{
+	"Actions": [
+    {
+      "Icon": "images/icons/mmhmm-20",
+      "Name": "Toggle Virtual Camera",
+      "States": [
+        {
+          "Image": "images/icons/off-air-72",
+          "Name": "Off Air",
+          "Title": "Off Air"
+        },
+        {
+          "Image": "images/icons/on-air-72",
+          "Name": "On Air",
+          "Title": "On Air"
+        },
+        {
+          "Image": "images/icons/disabled-72",
+          "Name": "Disabled",
+          "Title": "Disabled",
+          "ShowTitle" : false
+        }
+      ],
+      "Tooltip": "Toggle mmhmm's virtual camera",
+      "UUID": "zone.paw.stream-deck.mmhmm.actions.away"
+    }
+  ],
+  "Author": "A.I. <ailis@paw.zone>",
+  "Category": "mmhmm.app",
+  "CategoryIcon": "images/icons/mmhmm-28",
+  "CodePath": "main.js",
+  "Description": "Control mmhmm.app",
+  "Icon": "images/icons/mmhmm-72",
+  "Name": "mmhmm.app",
+  "URL": "https://github.com/ailispaw/stream-deck",
+  "Version": "0.1",
+  "SDKVersion": 2,
+  "OS": [{
+    "Platform": "mac",
+    "MinimumVersion" : "10.14"
+  }],
+  "Software":  {
+    "MinimumVersion" : "4.1"
+  },
+  "ApplicationsToMonitor": {
+    "mac": [
+      "app.mmhmm.app"
+    ]
+  }
+}
