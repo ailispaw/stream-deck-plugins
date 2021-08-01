@@ -1,61 +1,24 @@
 #!/usr/local/bin/node --inspect
 
-const winston = require( 'winston' );
-const logger  = winston.createLogger({
-  level: 'info',
-  format: winston.format.combine(
-    winston.format.splat(),
-    winston.format.simple()
-  ),
-  transports: [
-    new winston.transports.Console(),
-    new winston.transports.File({ filename: 'console.log' }),
-  ],
-  exceptionHandlers: [
-    new winston.transports.File({ filename: 'exceptions.log' })
-  ]
-});
 const osascript = require( 'osascript' ).file;
+const logger    = require( './logger' );
 
-const args = process.argv.slice(2);
-logger.info( 'args: %o', args );
-connectElgatoStreamDeckSocket( args[1],  args[3], args[5], JSON.parse( args[7] ) );
+var running = false;
+var buttons = {};
 
 function connectElgatoStreamDeckSocket( inPort, inPluginUUID, inRegisterEvent, inInfo ) {
-  logger.info( 'inInfo: %o', inInfo );
+  const StreamDeck = require( './stream-deck' );
+  var streamDeck = new StreamDeck( inPort, inPluginUUID, inRegisterEvent, inInfo );
 
-  var DESTINATION = Object.freeze({
-    HARDWARE_AND_SOFTWARE : 0,
-    HARDWARE_ONLY         : 1,
-    SOFTWARE_ONLY         : 2
+  streamDeck.onOpen( function ( err ) {
+    osascript( 'JXA/running.js', function ( err, data ) {
+      running = eval( data.trim() );
+      logger.info( 'running: %s', running );
+    });
   });
 
-  var WebSocket = require( 'ws' );
-  var websocket = new WebSocket( 'ws://127.0.0.1:' + inPort );
-
-  websocket.on( 'open', function () {
-    // WebSocket is connected, send message
-    websocket.send( JSON.stringify({
-      event : inRegisterEvent,
-      uuid  : inPluginUUID
-    }) );
-  });
-
-  websocket.on( 'close', function () {
-    // Websocket is closed
-  });
-
-  var isRunning = false;
-  osascript( 'JXA/is_running.js', function ( err, data ) {
-    isRunning = eval( data.trim() );
-    logger.info( 'isRunning: %s', isRunning );
-  });
-  var buttons = {};
-
-  websocket.on( 'message', function ( event ) {
-    var json = JSON.parse( event );
-    logger.info( 'event: %o', json );
-    switch ( json['event'] ) {
+  streamDeck.onMessage( function ( message ) {
+    switch ( message['event'] ) {
       case 'didReceiveSettings':
         break;
       case 'didReceiveGlobalSettings':
@@ -63,49 +26,49 @@ function connectElgatoStreamDeckSocket( inPort, inPluginUUID, inRegisterEvent, i
       case 'keyDown':
         break;
       case 'keyUp':
-        if ( ! isRunning ) {
-          setState( json.context, 2 );
-          showAlert( json.context );
-       }
+        if ( ! running ) {
+          streamDeck.setState( message.context, 2 );
+          streamDeck.showAlert( message.context );
+        }
         break;
       case 'willAppear':
-        buttons[ json.context ] = {
-          action   : json.action,
-          state    : json.payload.state,
-          settings : json.payload.settings
+        buttons[ message.context ] = {
+          action   : message.action,
+          state    : message.payload.state,
+          settings : message.payload.settings
         };
-        logger.info( 'buttons: %o', buttons );
-        if ( ! isRunning ) {
-          setState( json.context, 2 );
+        logger.info( 'willAppear: buttons: %o', buttons );
+        if ( ! running ) {
+          streamDeck.setState( message.context, 2 );
         }
         break;
       case 'willDisappear':
-        delete buttons[ json.context ];
-        logger.info( 'buttons: %o', buttons );
+        delete buttons[ message.context ];
+        logger.info( 'willDisappear: buttons: %o', buttons );
         break;
       case 'titleParametersDidChange':
-        buttons[ json.context ] = {
-          action   : json.action,
-          state    : json.payload.state,
-          title    : json.payload.title,
-          settings : json.payload.settings
+        buttons[ message.context ] = {
+          action   : message.action,
+          state    : message.payload.state,
+          title    : message.payload.title,
+          settings : message.payload.settings
         };
-        logger.info( 'buttons: %o', buttons );
+        logger.info( 'titleParametersDidChange: buttons: %o', buttons );
         break;
       case 'deviceDidConnect':
         break;
       case 'deviceDidDisconnect':
         break;
       case 'applicationDidLaunch':
-        isRunning = true;
-        logger.info( 'isRunning: %s', isRunning );
+        running = true;
+        logger.info( 'applicationDidLaunch: running: %s', running );
         // check all button statuses
         break;
       case 'applicationDidTerminate':
-        isRunning = false;
-        logger.info( 'isRunning: %s', isRunning );
+        running = false;
+        logger.info( 'applicationDidTerminate: running: %s', running );
         Object.keys( buttons ).forEach( context => {
-          setState( context, 2 );
+          streamDeck.setState( context, 2 );
         });
         break;
       case 'systemDidWakeUp':
@@ -119,36 +82,10 @@ function connectElgatoStreamDeckSocket( inPort, inPluginUUID, inRegisterEvent, i
       default:
     }
   });
-
-  function setState ( context, state ) {
-    websocket.send( JSON.stringify({
-      event   : 'setState',
-      context : context,
-      payload : {
-        state : state
-      }
-    }) );
-  }
-
-  function setSettings ( context, settings ) {
-    websocket.send( JSON.stringify({
-      event   : 'setSettings',
-      context : context,
-      payload : settings
-    }) );
-  }
-
-  function showAlert ( context ) {
-    websocket.send( JSON.stringify({
-      event   : 'showAlert',
-      context : context
-    }) );
-  }
 }
 
-/*
-var osascript = require('osascript').file;
-osascript( 'main.js', {
-  args: process.argv.slice(2)
-}).pipe( process.stdout );
-*/
+if ( require.main === module ) {
+  const args = process.argv.slice(2);
+  logger.info( 'main: args: %o', args );
+  connectElgatoStreamDeckSocket( args[1],  args[3], args[5], JSON.parse( args[7] ) );
+}
