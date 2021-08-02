@@ -31,7 +31,7 @@ class StreamDeck {
   onMessage ( callback ) {
     this.websocket.on( 'message', function ( event ) {
       var json = JSON.parse( event );
-      logger.info( 'onMessage: event: %o', json );
+      logger.debug( 'onMessage: event: %o', json );
       if ( typeof callback == 'function' ) {
         callback( json );
       }

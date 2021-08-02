@@ -1,7 +1,11 @@
 #!/usr/local/bin/node --inspect
 
-const osascript = require( 'osascript' ).file;
-const logger    = require( './logger' );
+const logger = require( './logger' );
+const mmhmm  = require( './mmhmm' );
+
+const actions = {
+  'zone.paw.stream-deck.mmhmm.actions.away' : require( './actions/away' )
+};
 
 var running = false;
 var buttons = {};
@@ -10,15 +14,12 @@ function connectElgatoStreamDeckSocket( inPort, inPluginUUID, inRegisterEvent, i
   const StreamDeck = require( './stream-deck' );
   var streamDeck = new StreamDeck( inPort, inPluginUUID, inRegisterEvent, inInfo );
 
-  streamDeck.onOpen( function ( err ) {
-    osascript( 'JXA/running.js', function ( err, data ) {
-      running = eval( data.trim() );
-      logger.info( 'running: %s', running );
-    });
+  streamDeck.onOpen( async function ( err ) {
+    running = await mmhmm.running();
   });
 
-  streamDeck.onMessage( function ( message ) {
-    switch ( message['event'] ) {
+  streamDeck.onMessage( async function ( message ) {
+    switch ( message.event ) {
       case 'didReceiveSettings':
         break;
       case 'didReceiveGlobalSettings':
@@ -26,49 +27,65 @@ function connectElgatoStreamDeckSocket( inPort, inPluginUUID, inRegisterEvent, i
       case 'keyDown':
         break;
       case 'keyUp':
+        var button = buttons[ message.context ];
         if ( ! running ) {
-          streamDeck.setState( message.context, 2 );
+          button.api.disable();
           streamDeck.showAlert( message.context );
+        } else {
+          button.api.onKeyUp();
         }
         break;
       case 'willAppear':
-        buttons[ message.context ] = {
+        var button = buttons[ message.context ] = {
           action   : message.action,
           state    : message.payload.state,
-          settings : message.payload.settings
+          settings : message.payload.settings,
+          api      : new actions[ message.action ]( streamDeck, message.context )
         };
-        logger.info( 'willAppear: buttons: %o', buttons );
+        logger.debug( 'willAppear: buttons: %o', buttons );
         if ( ! running ) {
-          streamDeck.setState( message.context, 2 );
+          button.api.disable();
+        } else {
+          button.api.updateState();
         }
         break;
       case 'willDisappear':
+        buttons[ message.context ].api.destructor();
+        delete buttons[ message.context ].api;
         delete buttons[ message.context ];
-        logger.info( 'willDisappear: buttons: %o', buttons );
+        logger.debug( 'willDisappear: buttons: %o', buttons );
         break;
       case 'titleParametersDidChange':
-        buttons[ message.context ] = {
-          action   : message.action,
-          state    : message.payload.state,
-          title    : message.payload.title,
-          settings : message.payload.settings
-        };
-        logger.info( 'titleParametersDidChange: buttons: %o', buttons );
+        var button = buttons[ message.context ];
+        button.state    = message.payload.state;
+        button.title    = message.payload.title;
+        button.settings = message.payload.settings;
+        logger.debug( 'titleParametersDidChange: buttons: %o', buttons );
         break;
       case 'deviceDidConnect':
         break;
       case 'deviceDidDisconnect':
         break;
       case 'applicationDidLaunch':
-        running = true;
-        logger.info( 'applicationDidLaunch: running: %s', running );
-        // check all button statuses
+        do {
+          await sleep( 500 );
+          running = await mmhmm.running();
+        } while ( ! running );
+        logger.debug( 'applicationDidLaunch: running: %s', running );
+        await sleep( 500 );
+        Object.keys( buttons ).forEach( context => {
+          buttons[ context ].api.updateState();
+        });
         break;
       case 'applicationDidTerminate':
-        running = false;
-        logger.info( 'applicationDidTerminate: running: %s', running );
+        do {
+          await sleep( 500 );
+          running = await mmhmm.running();
+        } while ( running );
+        logger.debug( 'applicationDidTerminate: running: %s', running );
+        await sleep( 500 );
         Object.keys( buttons ).forEach( context => {
-          streamDeck.setState( context, 2 );
+          buttons[ context ].api.disable();
         });
         break;
       case 'systemDidWakeUp':
@@ -85,7 +102,11 @@ function connectElgatoStreamDeckSocket( inPort, inPluginUUID, inRegisterEvent, i
 }
 
 if ( require.main === module ) {
-  const args = process.argv.slice(2);
+  const args = process.argv.slice( 2 );
   logger.info( 'main: args: %o', args );
-  connectElgatoStreamDeckSocket( args[1],  args[3], args[5], JSON.parse( args[7] ) );
+  connectElgatoStreamDeckSocket( args[ 1 ],  args[ 3 ], args[ 5 ], JSON.parse( args[ 7 ] ) );
+}
+
+function sleep ( ms ) {
+  return new Promise( resolve => setTimeout( resolve, ms ) );
 }
