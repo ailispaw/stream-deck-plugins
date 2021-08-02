@@ -1,5 +1,6 @@
 #!/usr/local/bin/node --inspect
 
+const utils  = require( './utils' );
 const logger = require( './logger' );
 const mmhmm  = require( './mmhmm' );
 
@@ -68,22 +69,22 @@ function connectElgatoStreamDeckSocket( inPort, inPluginUUID, inRegisterEvent, i
         break;
       case 'applicationDidLaunch':
         do {
-          await sleep( 500 );
+          await utils.sleep( 500 );
           running = await mmhmm.running();
         } while ( ! running );
         logger.debug( 'applicationDidLaunch: running: %s', running );
-        await sleep( 500 );
+        await utils.sleep( 500 );
         Object.keys( buttons ).forEach( context => {
           buttons[ context ].api.updateState();
         });
         break;
       case 'applicationDidTerminate':
         do {
-          await sleep( 500 );
+          await utils.sleep( 500 );
           running = await mmhmm.running();
         } while ( running );
         logger.debug( 'applicationDidTerminate: running: %s', running );
-        await sleep( 500 );
+        await utils.sleep( 500 );
         Object.keys( buttons ).forEach( context => {
           buttons[ context ].api.disable();
         });
@@ -105,8 +106,4 @@ if ( require.main === module ) {
   const args = process.argv.slice( 2 );
   logger.info( 'main: args: %o', args );
   connectElgatoStreamDeckSocket( args[ 1 ],  args[ 3 ], args[ 5 ], JSON.parse( args[ 7 ] ) );
-}
-
-function sleep ( ms ) {
-  return new Promise( resolve => setTimeout( resolve, ms ) );
 }
