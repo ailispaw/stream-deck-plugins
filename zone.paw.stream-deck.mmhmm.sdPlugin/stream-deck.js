@@ -20,11 +20,21 @@ class StreamDeck {
 
   onOpen ( callback ) {
     var self = this;
-    this.websocket.on( 'open', function () {
+    this.websocket.on( 'open', function ( event ) {
+      logger.debug( 'onOpen: event: %o', event );
       self.websocket.send( JSON.stringify({
         event : self.event,
         uuid  : self.uiid
       }), callback );
+    });
+  }
+
+  onClose ( callback ) {
+    this.websocket.on( 'close', function ( event ) {
+      logger.debug( 'onClose: event: %o', event );
+      if ( typeof callback == 'function' ) {
+        callback( event );
+      }
     });
   }
 

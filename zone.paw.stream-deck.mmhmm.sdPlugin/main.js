@@ -9,18 +9,27 @@ const actions = {
   'zone.paw.stream-deck.mmhmm.actions.hide' : require( './actions/hide' ),
 };
 
-var running = false;
 var buttons = {};
 
 function connectElgatoStreamDeckSocket( inPort, inPluginUUID, inRegisterEvent, inInfo ) {
   const StreamDeck = require( './stream-deck' );
   var streamDeck = new StreamDeck( inPort, inPluginUUID, inRegisterEvent, inInfo );
 
-  streamDeck.onOpen( async function ( err ) {
-    running = await mmhmm.running();
+  streamDeck.onOpen( function ( err ) {
+    mmhmm.running().then( function ( running ) {
+      if ( running ) {
+        stateObserver.start();
+      } else {
+        stateObserver.updateState();
+      }
+    });
   });
 
-  streamDeck.onMessage( async function ( message ) {
+  streamDeck.onClose( function () {
+    stateObserver.stop();
+  });
+
+  streamDeck.onMessage( function ( message ) {
     switch ( message.event ) {
       case 'didReceiveSettings':
         break;
@@ -30,12 +39,7 @@ function connectElgatoStreamDeckSocket( inPort, inPluginUUID, inRegisterEvent, i
         break;
       case 'keyUp':
         var button = buttons[ message.context ];
-        if ( ! running ) {
-          button.api.disable();
-          streamDeck.showAlert( message.context );
-        } else {
-          button.api.onKeyUp();
-        }
+        button.api.onKeyUp();
         break;
       case 'willAppear':
         var button = buttons[ message.context ] = {
@@ -45,16 +49,13 @@ function connectElgatoStreamDeckSocket( inPort, inPluginUUID, inRegisterEvent, i
           api      : new actions[ message.action ]( streamDeck, message.context )
         };
         logger.debug( 'willAppear: buttons: %o', buttons );
-        if ( ! running ) {
-          button.api.disable();
-        } else {
-          button.api.updateState();
-        }
+        button.api.updateState();
         break;
       case 'willDisappear':
-        buttons[ message.context ].api.destructor();
-        delete buttons[ message.context ].api;
-        delete buttons[ message.context ];
+        if ( buttons[ message.context ] ) {
+          delete buttons[ message.context ].api;
+          delete buttons[ message.context ];
+        }
         logger.debug( 'willDisappear: buttons: %o', buttons );
         break;
       case 'titleParametersDidChange':
@@ -69,25 +70,13 @@ function connectElgatoStreamDeckSocket( inPort, inPluginUUID, inRegisterEvent, i
       case 'deviceDidDisconnect':
         break;
       case 'applicationDidLaunch':
-        do {
-          await utils.sleep( 500 );
-          running = await mmhmm.running();
-        } while ( ! running );
-        logger.debug( 'applicationDidLaunch: running: %s', running );
-        await utils.sleep( 500 );
-        Object.keys( buttons ).forEach( context => {
-          buttons[ context ].api.updateState();
-        });
+        stateObserver.start();
         break;
       case 'applicationDidTerminate':
-        do {
-          await utils.sleep( 500 );
-          running = await mmhmm.running();
-        } while ( running );
-        logger.debug( 'applicationDidTerminate: running: %s', running );
-        await utils.sleep( 500 );
-        Object.keys( buttons ).forEach( context => {
+        stateObserver.stop();
+        Object.keys( buttons ).forEach( async context => {
           buttons[ context ].api.disable();
+          await utils.sleep( 500 );
         });
         break;
       case 'systemDidWakeUp':
@@ -101,6 +90,45 @@ function connectElgatoStreamDeckSocket( inPort, inPluginUUID, inRegisterEvent, i
       default:
     }
   });
+
+  var stateObserver = {
+    timer     : null,
+    interval  : 1000,
+    observing : false,
+
+    start : function () {
+      if ( this.observing ) {
+        return;
+      }
+      this.observing = true;
+      this.updateState( true );
+    },
+
+    stop : function () {
+      this.observing = false;
+      if ( this.timer ) {
+        clearTimeout( this.timer );
+        this.timer = null;
+      }
+    },
+
+    updateState: function ( continuous = false ) {
+      if ( this.timer && continuous ) {
+        clearTimeout( this.timer );
+        this.timer = null;
+      }
+      Object.keys( buttons ).forEach( async context => {
+        buttons[ context ].api.updateState();
+        await utils.sleep( 500 );
+      });
+      if ( this.observing && continuous ) {
+        var self = this;
+        this.timer = setTimeout( function () {
+          self.updateState( true );
+        }, this.interval );
+      }
+    }
+  };
 }
 
 if ( require.main === module ) {

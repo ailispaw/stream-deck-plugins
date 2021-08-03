@@ -10,37 +10,12 @@ class StreamDeckActionHide {
   #streamDeck;
   #context;
 
-  #timer    = null;
-  #interval = 1000;
-
-  #destructed = false;
-
   constructor ( streamDeck, context ) {
     this.#streamDeck = streamDeck;
     this.#context    = context;
-
-    var self = this;
-    this.#timer = setTimeout( function () {
-      self.updateState();
-    }, this.#interval );
-  }
-
-  destructor () {
-    if ( this.#timer ) {
-      clearTimeout( this.#timer );
-      this.#timer = null;
-    }
-    this.#destructed = true;
   }
 
   updateState () {
-    if ( this.#timer ) {
-      clearTimeout( this.#timer );
-      this.#timer = null;
-    }
-    if ( this.#destructed ) {
-      return;
-    }
     var self = this;
     mmhmm.hide().then( function ( hiding ) {
       if ( hiding !== undefined ) {
@@ -48,9 +23,6 @@ class StreamDeckActionHide {
       } else {
         self.#streamDeck.setState( self.#context, STATE.DISABLED );
       }
-      self.#timer = setTimeout( function () {
-        self.updateState();
-      }, self.#interval );
     });
   }
 
@@ -65,6 +37,7 @@ class StreamDeckActionHide {
         self.#streamDeck.setState( self.#context, ( hiding ? STATE.HIDING : STATE.SHOWING ) );
       } else {
         self.#streamDeck.setState( self.#context, STATE.DISABLED );
+        self.#streamDeck.showAlert( self.#context );
       }
     });
   }
