@@ -1,26 +1,22 @@
 ObjC.import( 'Cocoa' );
 var args = ObjC.deepUnwrap( $.NSProcessInfo.processInfo.arguments ).slice( 4 );
 
-var sys = Application('System Events');
+(function ( click = false ) {
+  var app = Application( 'mmhmm.app' );
+  if ( ! app.running() ) {
+    return;
+  }
+  try {
+    var sys   = Application( 'System Events' );
+    var proc  = sys.processes.byName( 'mmhmm' );
+    var win   = proc.windows.whose({ description: 'standard window' })[0];
+    var group = win.groups.whose({ description: 'Inspectors' })[0];
+    group.checkboxes.byName( 'Presenter' ).click();
 
-try {
-	var proc = sys.processes.byName("mmhmm");
-
-	var win = proc.windows.whose({
-		description: 'standard window'
-	})[0];
-
-	var group = win.groups.whose({
-		description: 'Inspectors'
-	})[0];
-
-	group.checkboxes.byName('Presenter').click();
-
-	var away = group.scrollAreas[0].groups[0].uiElements.byName('Away');
-	if ( args.length > 0 ) {
-		away.click();
-	}
-	away.value() == 1;
-} catch ( e ) {
-	undefined;
-}
+    var away = group.scrollAreas[0].groups[0].uiElements.byName( 'Away' );
+    if ( click ) {
+      away.click();
+    }
+    return ( away.value() == 1 );
+  } catch ( e ) {}
+}).apply( this, args );
