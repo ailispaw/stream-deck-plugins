@@ -23,6 +23,30 @@
       ],
       "Tooltip": "Toggle mmhmm's virtual camera",
       "UUID": "zone.paw.stream-deck.mmhmm.actions.away"
+    },
+    {
+      "Icon": "images/icons/mmhmm-20",
+      "Name": "Toggle Presenter Opacity",
+      "States": [
+        {
+          "Image": "images/icons/off-air-72",
+          "Name": "Hiding",
+          "Title": "Hiding"
+        },
+        {
+          "Image": "images/icons/on-air-72",
+          "Name": "Showing",
+          "Title": "Showing"
+        },
+        {
+          "Image": "images/icons/disabled-72",
+          "Name": "Disabled",
+          "Title": "Disabled",
+          "ShowTitle" : false
+        }
+      ],
+      "Tooltip": "Toggle the presenter opacity",
+      "UUID": "zone.paw.stream-deck.mmhmm.actions.hide"
     }
   ],
   "Author": "A.I. <ailis@paw.zone>",

@@ -23,6 +23,18 @@ class mmhmm {
       });
     });
   }
+
+  hide ( click ) {
+    return new Promise( resolve => {
+      osascript( 'JXA/hide.js', {
+        args: ( click ? [ click ] : [] )
+      }, function ( err, data ) {
+        var hiding = eval( data.trim() );
+        logger.debug( 'mmhmm: hiding: %s', hiding );
+        resolve( hiding );
+      });
+    });
+  }
 }
 
 module.exports = new mmhmm();

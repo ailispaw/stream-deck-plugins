@@ -5,7 +5,8 @@ const logger = require( './logger' );
 const mmhmm  = require( './mmhmm' );
 
 const actions = {
-  'zone.paw.stream-deck.mmhmm.actions.away' : require( './actions/away' )
+  'zone.paw.stream-deck.mmhmm.actions.away' : require( './actions/away' ),
+  'zone.paw.stream-deck.mmhmm.actions.hide' : require( './actions/hide' ),
 };
 
 var running = false;
