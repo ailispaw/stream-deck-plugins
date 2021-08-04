@@ -5,8 +5,9 @@ const logger = require( './logger' );
 const mmhmm  = require( './mmhmm' );
 
 const actions = {
-  'zone.paw.stream-deck.mmhmm.actions.away' : require( './actions/away' ),
-  'zone.paw.stream-deck.mmhmm.actions.hide' : require( './actions/hide' ),
+  'zone.paw.stream-deck.mmhmm.actions.away'  : require( './actions/away' ),
+  'zone.paw.stream-deck.mmhmm.actions.hide'  : require( './actions/hide' ),
+  'zone.paw.stream-deck.mmhmm.actions.scene' : require( './actions/scene' ),
 };
 
 var buttons = {};
@@ -32,6 +33,11 @@ function connectElgatoStreamDeckSocket( inPort, inPluginUUID, inRegisterEvent, i
   streamDeck.onMessage( function ( message ) {
     switch ( message.event ) {
       case 'didReceiveSettings':
+        var button = buttons[ message.context ];
+        button.state    = message.payload.state;
+        button.settings = message.payload.settings;
+        logger.debug( 'didReceiveSettings: buttons: %o', buttons );
+        button.api.updateState( button.settings );
         break;
       case 'didReceiveGlobalSettings':
         break;
@@ -39,7 +45,7 @@ function connectElgatoStreamDeckSocket( inPort, inPluginUUID, inRegisterEvent, i
         break;
       case 'keyUp':
         var button = buttons[ message.context ];
-        button.api.onKeyUp();
+        button.api.onKeyUp( button.settings );
         break;
       case 'willAppear':
         var button = buttons[ message.context ] = {
@@ -49,7 +55,7 @@ function connectElgatoStreamDeckSocket( inPort, inPluginUUID, inRegisterEvent, i
           api      : new actions[ message.action ]( streamDeck, message.context )
         };
         logger.debug( 'willAppear: buttons: %o', buttons );
-        button.api.updateState();
+        button.api.updateState( button.settings );
         break;
       case 'willDisappear':
         if ( buttons[ message.context ] ) {
@@ -64,6 +70,7 @@ function connectElgatoStreamDeckSocket( inPort, inPluginUUID, inRegisterEvent, i
         button.title    = message.payload.title;
         button.settings = message.payload.settings;
         logger.debug( 'titleParametersDidChange: buttons: %o', buttons );
+        button.api.updateState( button.settings );
         break;
       case 'deviceDidConnect':
         break;
@@ -118,7 +125,7 @@ function connectElgatoStreamDeckSocket( inPort, inPluginUUID, inRegisterEvent, i
         this.timer = null;
       }
       Object.keys( buttons ).forEach( async context => {
-        buttons[ context ].api.updateState();
+        buttons[ context ].api.updateState( buttons[ context ].settings );
         await utils.sleep( 500 );
       });
       if ( this.observing && continuous ) {

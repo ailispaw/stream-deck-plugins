@@ -47,6 +47,30 @@
       ],
       "Tooltip": "Toggle the presenter opacity",
       "UUID": "zone.paw.stream-deck.mmhmm.actions.hide"
+    },
+    {
+      "Icon": "images/icons/mmhmm-20",
+      "Name": "Select Scene",
+      "States": [
+        {
+          "Image": "images/icons/off-air-72",
+          "Name": "Off Air",
+          "Title": "Scene"
+        },
+        {
+          "Image": "images/icons/on-air-72",
+          "Name": "On Air",
+          "Title": "Scene"
+        },
+        {
+          "Image": "images/icons/disabled-72",
+          "Name": "Disabled",
+          "Title": "Disabled",
+          "ShowTitle" : false
+        }
+      ],
+      "Tooltip": "Select a Scene",
+      "UUID": "zone.paw.stream-deck.mmhmm.actions.scene"
     }
   ],
   "Author": "A.I. <ailis@paw.zone>",

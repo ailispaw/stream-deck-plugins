@@ -1,12 +1,12 @@
 const mmhmm = require( '../mmhmm' );
 
 const STATE = Object.freeze({
-  HIDING   : 0,
-  SHOWING  : 1,
+  OFF_AIR  : 0,
+  ON_AIR   : 1,
   DISABLED : 2
 });
 
-class StreamDeckActionHide {
+class StreamDeckActionScene {
   #streamDeck;
   #context;
 
@@ -17,9 +17,9 @@ class StreamDeckActionHide {
 
   updateState ( settings ) {
     var self = this;
-    mmhmm.hide().then( function ( hiding ) {
-      if ( hiding !== undefined ) {
-        self.#streamDeck.setState( self.#context, ( hiding ? STATE.HIDING : STATE.SHOWING ) );
+    mmhmm.scene( settings.scene_name ).then( function ( scene ) {
+      if ( scene !== undefined ) {
+        self.#streamDeck.setState( self.#context, ( scene ? STATE.ON_AIR : STATE.OFF_AIR ) );
       } else {
         self.#streamDeck.setState( self.#context, STATE.DISABLED );
       }
@@ -32,9 +32,9 @@ class StreamDeckActionHide {
 
   onKeyUp ( settings ) {
     var self = this;
-    mmhmm.hide( true ).then( function ( hiding ) {
-      if ( hiding !== undefined ) {
-        self.#streamDeck.setState( self.#context, ( hiding ? STATE.HIDING : STATE.SHOWING ) );
+    mmhmm.scene( settings.scene_name, true ).then( function ( scene ) {
+      if ( scene !== undefined ) {
+        self.#streamDeck.setState( self.#context, ( scene ? STATE.ON_AIR : STATE.OFF_AIR ) );
       } else {
         self.#streamDeck.setState( self.#context, STATE.DISABLED );
         self.#streamDeck.showAlert( self.#context );
@@ -43,4 +43,4 @@ class StreamDeckActionHide {
   }
 }
 
-module.exports = StreamDeckActionHide;
+module.exports = StreamDeckActionScene;

@@ -13,7 +13,7 @@ class mmhmm {
     });
   }
 
-  away ( click ) {
+  away ( click = false ) {
     return new Promise( resolve => {
       osascript( 'JXA/away.js', {
         args: ( click ? [ click ] : [] )
@@ -25,7 +25,7 @@ class mmhmm {
     });
   }
 
-  hide ( click ) {
+  hide ( click = false ) {
     return new Promise( resolve => {
       osascript( 'JXA/hide.js', {
         args: ( click ? [ click ] : [] )
@@ -33,6 +33,18 @@ class mmhmm {
         var hiding = utils.primitiveEval( data );
         logger.debug( 'mmhmm: hiding: %s', hiding );
         resolve( hiding );
+      });
+    });
+  }
+
+  scene ( name, click = false ) {
+    return new Promise( resolve => {
+      osascript( 'JXA/scene.js', {
+        args: ( click ? [ name, click, __dirname ] : [ name ] )
+      }, function ( err, data ) {
+        var scene = utils.primitiveEval( data );
+        logger.debug( 'mmhmm: scene: %s %s', name, scene );
+        resolve( scene );
       });
     });
   }
