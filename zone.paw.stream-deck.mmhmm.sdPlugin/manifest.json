@@ -51,6 +51,7 @@
     {
       "Icon": "images/icons/mmhmm-20",
       "Name": "Select Scene",
+      "PropertyInspectorPath": "sdpi/scene.html",
       "States": [
         {
           "Image": "images/icons/off-air-72",

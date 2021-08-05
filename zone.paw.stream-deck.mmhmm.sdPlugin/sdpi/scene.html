@@ -1,0 +1,32 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>zone.paw.stream-deck.mmhmm.actions.scene</title>
+    <link rel="stylesheet" href="sdpi.css">
+  </head>
+  <body>
+    <div class="sdpi-wrapper">
+      <div class="sdpi-item">
+        <div class="sdpi-item-label">Scene Name</div>
+        <input class="sdpi-item-value" type="text" id="scene_name" placeholder="Scene Name" />
+      </div>
+    </div>
+    <script src="sdpi.js"></script>
+    <script>
+      var scene_name = document.getElementById( 'scene_name' );
+      scene_name.addEventListener( 'input', function ( event ) {
+        setSettings({
+          scene_name: this.value
+        });
+      });
+
+      function pi_init ( settings ) {
+        var scene_name = document.getElementById( 'scene_name' );
+        if ( settings.scene_name ) {
+          scene_name.value = settings.scene_name;
+        }
+      }
+    </script>
+  </body>
+</html>
