@@ -16,8 +16,8 @@ function connectElgatoStreamDeckSocket( inPort, inPluginUUID, inRegisterEvent, i
   const StreamDeck = require( './stream-deck' );
   var streamDeck = new StreamDeck( inPort, inPluginUUID, inRegisterEvent, inInfo );
 
-  streamDeck.onOpen( function ( err ) {
-    mmhmm.running().then( function ( running ) {
+  streamDeck.onOpen(( err ) => {
+    mmhmm.running().then(( running ) => {
       if ( running ) {
         stateObserver.start();
       } else {
@@ -26,11 +26,11 @@ function connectElgatoStreamDeckSocket( inPort, inPluginUUID, inRegisterEvent, i
     });
   });
 
-  streamDeck.onClose( function () {
+  streamDeck.onClose(() => {
     stateObserver.stop();
   });
 
-  streamDeck.onMessage( function ( message ) {
+  streamDeck.onMessage(( message ) => {
     switch ( message.event ) {
       case 'didReceiveSettings':
         var button = buttons[ message.context ];
@@ -83,7 +83,7 @@ function connectElgatoStreamDeckSocket( inPort, inPluginUUID, inRegisterEvent, i
         break;
       case 'applicationDidTerminate':
         stateObserver.stop();
-        Object.keys( buttons ).forEach( async context => {
+        Object.keys( buttons ).forEach( async ( context ) => {
           buttons[ context ].api.disable();
           await utils.sleep( 500 );
         });
@@ -127,8 +127,8 @@ function connectElgatoStreamDeckSocket( inPort, inPluginUUID, inRegisterEvent, i
         this.timer = null;
       }
       if ( Object.keys( buttons ).length ) {
-        mmhmm.state().then( function ( state ) {
-          Object.keys( buttons ).forEach( async context => {
+        mmhmm.state().then(( state ) => {
+          Object.keys( buttons ).forEach( async ( context ) => {
             buttons[ context ].api.setState( state[ buttons[ context ].action ], buttons[ context ].settings );
             await utils.sleep( 500 );
           });
@@ -136,7 +136,7 @@ function connectElgatoStreamDeckSocket( inPort, inPluginUUID, inRegisterEvent, i
       }
       if ( this.observing && continuous ) {
         var self = this;
-        this.timer = setTimeout( function () {
+        this.timer = setTimeout(() => {
           self.updateState( true );
         }, this.interval );
       }

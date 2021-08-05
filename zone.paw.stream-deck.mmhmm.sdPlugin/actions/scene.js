@@ -26,7 +26,7 @@ class StreamDeckActionScene {
 
   updateState ( settings ) {
     var self = this;
-    mmhmm.scene( settings.scene_name ).then( function ( state ) {
+    mmhmm.scene( settings.scene_name ).then(( state ) => {
       self.setState( ( state ? settings.scene_name : state ), settings );
     });
   }
@@ -37,7 +37,7 @@ class StreamDeckActionScene {
 
   onKeyUp ( settings ) {
     var self = this;
-    mmhmm.scene( settings.scene_name, true ).then( function ( state ) {
+    mmhmm.scene( settings.scene_name, true ).then(( state ) => {
       self.setState( ( state ? settings.scene_name : state ), settings );
       if ( state === undefined ) {
         self.#streamDeck.showAlert( self.#context );

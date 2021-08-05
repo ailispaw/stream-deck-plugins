@@ -1,7 +1,7 @@
 ObjC.import( 'Cocoa' );
 var args = ObjC.deepUnwrap( $.NSProcessInfo.processInfo.arguments ).slice( 4 );
 
-(function ( click = false ) {
+(( click = false ) => {
   var app = Application( 'mmhmm.app' );
   if ( ! app.running() ) {
     return;

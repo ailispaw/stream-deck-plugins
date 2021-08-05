@@ -25,7 +25,7 @@ class StreamDeckActionAway {
 
   updateState ( settings ) {
     var self = this;
-    mmhmm.away().then( function ( state ) {
+    mmhmm.away().then(( state ) => {
       self.setState( state, settings );
     });
   }
@@ -36,7 +36,7 @@ class StreamDeckActionAway {
 
   onKeyUp ( settings ) {
     var self = this;
-    mmhmm.away( true ).then( function ( state ) {
+    mmhmm.away( true ).then(( state ) => {
       self.setState( state, settings );
       if ( state === undefined ) {
         self.#streamDeck.showAlert( self.#context );

@@ -20,7 +20,7 @@ class StreamDeck {
 
   onOpen ( callback ) {
     var self = this;
-    this.websocket.on( 'open', function ( event ) {
+    this.websocket.on( 'open', ( event ) => {
       logger.debug( 'onOpen: event: %o', event );
       self.websocket.send( JSON.stringify({
         event : self.event,
@@ -30,7 +30,7 @@ class StreamDeck {
   }
 
   onClose ( callback ) {
-    this.websocket.on( 'close', function ( event ) {
+    this.websocket.on( 'close', ( event ) => {
       logger.debug( 'onClose: event: %o', event );
       if ( typeof callback == 'function' ) {
         callback( event );
@@ -39,7 +39,7 @@ class StreamDeck {
   }
 
   onMessage ( callback ) {
-    this.websocket.on( 'message', function ( event ) {
+    this.websocket.on( 'message', ( event ) => {
       var json = JSON.parse( event );
       logger.debug( 'onMessage: event: %o', json );
       if ( typeof callback == 'function' ) {

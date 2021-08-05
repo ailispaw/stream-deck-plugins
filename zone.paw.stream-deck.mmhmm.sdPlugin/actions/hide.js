@@ -25,7 +25,7 @@ class StreamDeckActionHide {
 
   updateState ( settings ) {
     var self = this;
-    mmhmm.hide().then( function ( state ) {
+    mmhmm.hide().then(( state ) => {
       self.setState( state, settings );
     });
   }
@@ -36,7 +36,7 @@ class StreamDeckActionHide {
 
   onKeyUp ( settings ) {
     var self = this;
-    mmhmm.hide( true ).then( function ( state ) {
+    mmhmm.hide( true ).then(( state ) => {
       self.setState( state, settings );
       if ( state === undefined ) {
         self.#streamDeck.showAlert( self.#context );

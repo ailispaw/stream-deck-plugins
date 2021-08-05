@@ -15,9 +15,9 @@
     <script src="sdpi.js"></script>
     <script>
       var scene_name = document.getElementById( 'scene_name' );
-      scene_name.addEventListener( 'input', function ( event ) {
+      scene_name.addEventListener( 'input', ( event ) => {
         setSettings({
-          scene_name: this.value
+          scene_name: event.target.value
         });
       });
 
