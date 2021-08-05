@@ -5,7 +5,7 @@ const utils     = require( './utils' );
 class mmhmm {
   running () {
     return new Promise( resolve => {
-      osascript( 'JXA/running.js', function ( err, data ) {
+      osascript( 'JXA/running.jxa', function ( err, data ) {
         var running = utils.primitiveEval( data );
         logger.debug( 'mmhmm: running: %s', running );
         resolve( running );
@@ -15,7 +15,7 @@ class mmhmm {
 
   away ( click = false ) {
     return new Promise( resolve => {
-      osascript( 'JXA/away.js', {
+      osascript( 'JXA/away.jxa', {
         args: ( click ? [ click ] : [] )
       }, function ( err, data ) {
         var away = utils.primitiveEval( data );
@@ -27,7 +27,7 @@ class mmhmm {
 
   hide ( click = false ) {
     return new Promise( resolve => {
-      osascript( 'JXA/hide.js', {
+      osascript( 'JXA/hide.jxa', {
         args: ( click ? [ click ] : [] )
       }, function ( err, data ) {
         var hiding = utils.primitiveEval( data );
@@ -39,7 +39,7 @@ class mmhmm {
 
   scene ( name, click = false ) {
     return new Promise( resolve => {
-      osascript( 'JXA/scene.js', {
+      osascript( 'JXA/scene.jxa', {
         args: ( click ? [ name, click, __dirname ] : [ name ] )
       }, function ( err, data ) {
         var scene = utils.primitiveEval( data );

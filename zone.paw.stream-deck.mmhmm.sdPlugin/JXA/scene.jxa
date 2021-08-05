@@ -24,7 +24,7 @@ var args = ObjC.deepUnwrap( $.NSProcessInfo.processInfo.arguments ).slice( 4 );
       var scene = win.tabGroups.byName( 'Tab Bar' ).radioButtons.byName( name );
       var pos   = scene.position();
       var size  = scene.size();
-      var utils = require( rootDir + '/JXA/utils.js' );
+      var utils = require( rootDir + '/JXA/utils.jxa' );
       utils.click( app, pos[0] + ( size[0] / 2 ), pos[1] + ( size[1] / 2 ) );
     }
     return ( win.name() == name );
