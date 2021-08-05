@@ -5,9 +5,9 @@ const logger = require( './logger' );
 const mmhmm  = require( './mmhmm' );
 
 const actions = {
-  'zone.paw.stream-deck.mmhmm.actions.away'  : require( './actions/away' ),
-  'zone.paw.stream-deck.mmhmm.actions.hide'  : require( './actions/hide' ),
-  'zone.paw.stream-deck.mmhmm.actions.scene' : require( './actions/scene' ),
+  'away'  : require( './actions/away' ),
+  'hide'  : require( './actions/hide' ),
+  'scene' : require( './actions/scene' ),
 };
 
 var buttons = {};
@@ -48,11 +48,13 @@ function connectElgatoStreamDeckSocket( inPort, inPluginUUID, inRegisterEvent, i
         button.api.onKeyUp( button.settings );
         break;
       case 'willAppear':
+        var arrAction = message.action.split( '.' );
+        var action = arrAction[ arrAction.length - 1 ];
         var button = buttons[ message.context ] = {
-          action   : message.action,
+          action   : action,
           state    : message.payload.state,
           settings : message.payload.settings,
-          api      : new actions[ message.action ]( streamDeck, message.context )
+          api      : new actions[ action ]( streamDeck, message.context )
         };
         logger.debug( 'willAppear: buttons: %o', buttons );
         button.api.updateState( button.settings );
@@ -124,10 +126,14 @@ function connectElgatoStreamDeckSocket( inPort, inPluginUUID, inRegisterEvent, i
         clearTimeout( this.timer );
         this.timer = null;
       }
-      Object.keys( buttons ).forEach( async context => {
-        buttons[ context ].api.updateState( buttons[ context ].settings );
-        await utils.sleep( 500 );
-      });
+      if ( Object.keys( buttons ).length ) {
+        mmhmm.state().then( function ( state ) {
+          Object.keys( buttons ).forEach( async context => {
+            buttons[ context ].api.setState( state[ buttons[ context ].action ], buttons[ context ].settings );
+            await utils.sleep( 500 );
+          });
+        });
+      }
       if ( this.observing && continuous ) {
         var self = this;
         this.timer = setTimeout( function () {

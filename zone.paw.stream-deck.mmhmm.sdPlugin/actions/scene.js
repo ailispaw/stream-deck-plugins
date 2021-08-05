@@ -15,14 +15,19 @@ class StreamDeckActionScene {
     this.#context    = context;
   }
 
+  setState ( active_scene, settings ) {
+    if ( active_scene !== undefined ) {
+      var state = ( settings.scene_name == active_scene );
+      this.#streamDeck.setState( this.#context, ( state ? STATE.ON_AIR : STATE.OFF_AIR ) );
+    } else {
+      this.disable();
+    }
+  }
+
   updateState ( settings ) {
     var self = this;
-    mmhmm.scene( settings.scene_name ).then( function ( scene ) {
-      if ( scene !== undefined ) {
-        self.#streamDeck.setState( self.#context, ( scene ? STATE.ON_AIR : STATE.OFF_AIR ) );
-      } else {
-        self.#streamDeck.setState( self.#context, STATE.DISABLED );
-      }
+    mmhmm.scene( settings.scene_name ).then( function ( state ) {
+      self.setState( ( state ? settings.scene_name : state ), settings );
     });
   }
 
@@ -32,11 +37,9 @@ class StreamDeckActionScene {
 
   onKeyUp ( settings ) {
     var self = this;
-    mmhmm.scene( settings.scene_name, true ).then( function ( scene ) {
-      if ( scene !== undefined ) {
-        self.#streamDeck.setState( self.#context, ( scene ? STATE.ON_AIR : STATE.OFF_AIR ) );
-      } else {
-        self.#streamDeck.setState( self.#context, STATE.DISABLED );
+    mmhmm.scene( settings.scene_name, true ).then( function ( state ) {
+      self.setState( ( state ? settings.scene_name : state ), settings );
+      if ( state === undefined ) {
         self.#streamDeck.showAlert( self.#context );
       }
     });

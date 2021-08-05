@@ -13,6 +13,16 @@ class mmhmm {
     });
   }
 
+  state () {
+    return new Promise( resolve => {
+      osascript( 'JXA/state.jxa', function ( err, data ) {
+        var state = JSON.parse( data );
+        logger.debug( 'mmhmm: state: %o', state );
+        resolve( state );
+      });
+    });
+  }
+
   away ( click = false ) {
     return new Promise( resolve => {
       osascript( 'JXA/away.jxa', {

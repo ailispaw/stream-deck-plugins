@@ -1,10 +1,10 @@
 ObjC.import( 'Cocoa' );
 var args = ObjC.deepUnwrap( $.NSProcessInfo.processInfo.arguments ).slice( 4 );
 
-(function ( click = false ) {
+(function () {
   var app = Application( 'mmhmm.app' );
   if ( ! app.running() ) {
-    return;
+    return '{}';
   }
   try {
     var sys   = Application( 'System Events' );
@@ -13,10 +13,12 @@ var args = ObjC.deepUnwrap( $.NSProcessInfo.processInfo.arguments ).slice( 4 );
     var group = win.groups.whose({ description: 'Inspectors' })[0];
     group.checkboxes.byName( 'Presenter' ).click();
 
-    if ( click ) {
-      group.scrollAreas[0].buttons.whose({ help: 'Hide presenter (/)' })[0].click();
-    }
+    var away    = group.scrollAreas[0].groups[0].uiElements.byName( 'Away' );
     var opacity = group.scrollAreas[0].sliders.whose({ help: 'Adjust the presenter opacity' })[0];
-    return ( opacity.value() == 0 );
-  } catch ( e ) {}
+    return '{ "away"  : ' + ( away.value() == 1 )
+         + ', "hide"  : ' + ( opacity.value() == 0 )
+         + ', "scene" : "' + win.name() + '" }';
+  } catch ( e ) {
+    return '{}';
+  }
 }).apply( this, args );

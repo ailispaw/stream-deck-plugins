@@ -15,14 +15,18 @@ class StreamDeckActionAway {
     this.#context    = context;
   }
 
+  setState ( state, settings ) {
+    if ( state !== undefined ) {
+      this.#streamDeck.setState( this.#context, ( state ? STATE.OFF_AIR : STATE.ON_AIR ) );
+    } else {
+      this.disable();
+    }
+  }
+
   updateState ( settings ) {
     var self = this;
-    mmhmm.away().then( function ( away ) {
-      if ( away !== undefined ) {
-        self.#streamDeck.setState( self.#context, ( away ? STATE.OFF_AIR : STATE.ON_AIR ) );
-      } else {
-        self.#streamDeck.setState( self.#context, STATE.DISABLED );
-      }
+    mmhmm.away().then( function ( state ) {
+      self.setState( state, settings );
     });
   }
 
@@ -32,11 +36,9 @@ class StreamDeckActionAway {
 
   onKeyUp ( settings ) {
     var self = this;
-    mmhmm.away( true ).then( function ( away ) {
-      if ( away !== undefined ) {
-        self.#streamDeck.setState( self.#context, ( away ? STATE.OFF_AIR : STATE.ON_AIR ) );
-      } else {
-        self.#streamDeck.setState( self.#context, STATE.DISABLED );
+    mmhmm.away( true ).then( function ( state ) {
+      self.setState( state, settings );
+      if ( state === undefined ) {
         self.#streamDeck.showAlert( self.#context );
       }
     });

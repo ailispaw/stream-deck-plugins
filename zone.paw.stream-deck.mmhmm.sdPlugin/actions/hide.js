@@ -15,14 +15,18 @@ class StreamDeckActionHide {
     this.#context    = context;
   }
 
+  setState ( state, settings ) {
+    if ( state !== undefined ) {
+      this.#streamDeck.setState( this.#context, ( state ? STATE.HIDING : STATE.SHOWING ) );
+    } else {
+      this.disable();
+    }
+  }
+
   updateState ( settings ) {
     var self = this;
-    mmhmm.hide().then( function ( hiding ) {
-      if ( hiding !== undefined ) {
-        self.#streamDeck.setState( self.#context, ( hiding ? STATE.HIDING : STATE.SHOWING ) );
-      } else {
-        self.#streamDeck.setState( self.#context, STATE.DISABLED );
-      }
+    mmhmm.hide().then( function ( state ) {
+      self.setState( state, settings );
     });
   }
 
@@ -32,11 +36,9 @@ class StreamDeckActionHide {
 
   onKeyUp ( settings ) {
     var self = this;
-    mmhmm.hide( true ).then( function ( hiding ) {
-      if ( hiding !== undefined ) {
-        self.#streamDeck.setState( self.#context, ( hiding ? STATE.HIDING : STATE.SHOWING ) );
-      } else {
-        self.#streamDeck.setState( self.#context, STATE.DISABLED );
+    mmhmm.hide( true ).then( function ( state ) {
+      self.setState( state, settings );
+      if ( state === undefined ) {
         self.#streamDeck.showAlert( self.#context );
       }
     });
