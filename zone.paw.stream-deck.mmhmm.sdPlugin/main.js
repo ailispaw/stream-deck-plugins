@@ -5,9 +5,10 @@ const logger = require( './logger' );
 const mmhmm  = require( './mmhmm' );
 
 const actions = {
-  'away'  : require( './actions/away' ),
-  'hide'  : require( './actions/hide' ),
-  'scene' : require( './actions/scene' ),
+  'away'   : require( './actions/away' ),
+  'hide'   : require( './actions/hide' ),
+  'scene'  : require( './actions/scene' ),
+  'slides' : require( './actions/slides' ),
 };
 
 var buttons = {};

@@ -1,0 +1,38 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>zone.paw.stream-deck.mmhmm.actions.slides</title>
+    <link rel="stylesheet" href="sdpi.css">
+  </head>
+  <body>
+    <div class="sdpi-wrapper">
+      <div class="sdpi-item">
+        <div class="sdpi-item-label">Display Slides</div>
+        <select class="sdpi-item-value select" id="slides_mode" name="slides_mode">
+          <option value="Slides off" selected="selected">Off</option>
+          <option value="Shoulder">Shoulder</option>
+          <option value="Full">Full</option>
+        </select>
+      </div>
+    </div>
+    <script src="sdpi.js"></script>
+    <script>
+      var slides_mode = document.getElementById( 'slides_mode' );
+      slides_mode.addEventListener( 'change', ( event ) => {
+        setSettings({
+          slides_mode: event.target.value
+        });
+      });
+
+      function pi_init ( settings ) {
+        var slides_mode = document.getElementById( 'slides_mode' );
+        slides_mode.value = settings.slides_mode || 'Slides off';
+        console.debug( 'pi_init: slides_mode:', slides_mode.value );
+        setSettings({
+          slides_mode: slides_mode.value
+        });
+      }
+    </script>
+  </body>
+</html>

@@ -58,6 +58,18 @@ class mmhmm {
       });
     });
   }
+
+  slides ( mode, click = false ) {
+    return new Promise(( resolve ) => {
+      osascript( 'JXA/slides.jxa', {
+        args: ( click ? [ mode, click ] : [ mode ] )
+      }, ( err, data ) => {
+        var state = utils.primitiveEval( data );
+        logger.debug( 'mmhmm: slides: %s %s', mode, state );
+        resolve( state );
+      });
+    });
+  }
 }
 
 module.exports = new mmhmm();

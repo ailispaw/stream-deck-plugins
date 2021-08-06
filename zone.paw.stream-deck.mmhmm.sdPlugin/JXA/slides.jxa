@@ -1,0 +1,20 @@
+ObjC.import( 'Cocoa' );
+var args = ObjC.deepUnwrap( $.NSProcessInfo.processInfo.arguments ).slice( 4 );
+
+(( mode_name, click = false ) => {
+  var app = Application( 'mmhmm.app' );
+  if ( ! app.running() ) {
+    return;
+  }
+  try {
+    var sys  = Application( 'System Events' );
+    var proc = sys.processes.byName( 'mmhmm' );
+    var win  = proc.windows.whose({ description: 'standard window' })[0];
+    if ( click ) {
+      var mode = win.groups.byName( 'Slides' ).groups[0].radioGroups[0].radioButtons.byName( mode_name );
+      mode.click();
+    }
+    var mode = win.groups.byName( 'Slides' ).groups[0].radioGroups[0].radioButtons.whose({ value : 1 })[0];
+    return ( mode.name() == mode_name );
+} catch ( e ) {}
+}).apply( this, args );

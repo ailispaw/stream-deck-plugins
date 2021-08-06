@@ -15,9 +15,11 @@ var args = ObjC.deepUnwrap( $.NSProcessInfo.processInfo.arguments ).slice( 4 );
 
     var away    = group.scrollAreas[0].groups[0].uiElements.byName( 'Away' );
     var opacity = group.scrollAreas[0].sliders.whose({ help: 'Adjust the presenter opacity' })[0];
-    return '{ "away"  : ' + ( away.value() == 1 )
-         + ', "hide"  : ' + ( opacity.value() == 0 )
-         + ', "scene" : "' + win.name() + '" }';
+    var mode    = win.groups.byName( 'Slides' ).groups[0].radioGroups[0].radioButtons.whose({ value : 1 })[0];
+    return '{ "away"   : ' + ( away.value() == 1 )
+         + ', "hide"   : ' + ( opacity.value() == 0 )
+         + ', "scene"  : "' + win.name() + '"'
+         + ', "slides" : "' + mode.name() + '" }';
   } catch ( e ) {
     return '{}';
   }

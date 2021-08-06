@@ -72,6 +72,31 @@
       ],
       "Tooltip": "Select a Scene",
       "UUID": "zone.paw.stream-deck.mmhmm.actions.scene"
+    },
+    {
+      "Icon": "images/icons/mmhmm-20",
+      "Name": "Select Slides Mode",
+      "PropertyInspectorPath": "sdpi/slides.html",
+      "States": [
+        {
+          "Image": "images/icons/off-air-72",
+          "Name": "Off Air",
+          "Title": "Slides Mode"
+        },
+        {
+          "Image": "images/icons/on-air-72",
+          "Name": "On Air",
+          "Title": "Slides Mode"
+        },
+        {
+          "Image": "images/icons/disabled-72",
+          "Name": "Disabled",
+          "Title": "Disabled",
+          "ShowTitle" : false
+        }
+      ],
+      "Tooltip": "Select a display mode of slides",
+      "UUID": "zone.paw.stream-deck.mmhmm.actions.slides"
     }
   ],
   "Author": "A.I. <ailis@paw.zone>",

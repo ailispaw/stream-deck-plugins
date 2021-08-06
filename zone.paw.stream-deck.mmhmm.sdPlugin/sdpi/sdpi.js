@@ -22,23 +22,26 @@ function connectElgatoStreamDeckSocket ( inPort, inUUID, inRegisterEvent, inInfo
       event : inRegisterEvent,
       uuid  : inUUID
     }));
+    if ( typeof pi_init == 'function' ) {
+      setTimeout(() => {
+        pi_init( actionInfo.payload.settings );
+      }, 0 );
+    }
   };
 
   websocket.onmessage = function ( event ) {
     var message = JSON.parse( event.data );
+    console.debug( 'webSocket message:', message );
     switch ( message.event ) {
       case 'didReceiveSettings':
         break;
       default:
     }
   };
-
-  if ( typeof pi_init == 'function' ) {
-    pi_init( actionInfo.payload.settings );
-  }
 }
 
 function setSettings( payload ) {
+  console.debug( 'setSettings: payload:', payload );
   if ( websocket && ( websocket.readyState === 1 ) ) {
     websocket.send( JSON.stringify({
       event   : 'setSettings',
