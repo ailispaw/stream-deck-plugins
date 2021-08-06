@@ -6,6 +6,21 @@ const STATE = Object.freeze({
   DISABLED : 2
 });
 
+const BUTTONS = Object.freeze({
+  'Slides off' : {
+    0 : __dirname + '/../images/buttons/off-off-72@2x.png',
+    1 : __dirname + '/../images/buttons/off-on-72@2x.png'
+  },
+  'Shoulder' : {
+    0 : __dirname + '/../images/buttons/shoulder-off-72@2x.png',
+    1 : __dirname + '/../images/buttons/shoulder-on-72@2x.png'
+  },
+  'Full' : {
+    0 : __dirname + '/../images/buttons/full-off-72@2x.png',
+    1 : __dirname + '/../images/buttons/full-on-72@2x.png'
+  },
+});
+
 class StreamDeckActionSlides {
   #streamDeck;
   #context;
@@ -13,6 +28,11 @@ class StreamDeckActionSlides {
   constructor ( streamDeck, context ) {
     this.#streamDeck = streamDeck;
     this.#context    = context;
+  }
+
+  setImage ( settings ) {
+    this.#streamDeck.setImage( this.#context, STATE.OFF_AIR, BUTTONS[ settings.slides_mode ][ STATE.OFF_AIR ] );
+    this.#streamDeck.setImage( this.#context, STATE.ON_AIR,  BUTTONS[ settings.slides_mode ][ STATE.ON_AIR ] );
   }
 
   setState ( active_mode, settings ) {

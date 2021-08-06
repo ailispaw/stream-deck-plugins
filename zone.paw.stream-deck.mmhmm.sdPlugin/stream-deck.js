@@ -66,6 +66,23 @@ class StreamDeck {
     }), callback );
   }
 
+  setImage ( context, state, imagePath, callback ) {
+    const fs = require('fs');
+    var image64 = '';
+    if ( imagePath ) {
+      image64 = 'data:image/png;base64,' + fs.readFileSync( imagePath, { encoding: 'base64' } );
+    }
+    this.websocket.send( JSON.stringify({
+      event   : 'setImage',
+      context : context,
+      payload : {
+        image  : image64,
+        target : DESTINATION.HARDWARE_AND_SOFTWARE,
+        state  : state
+      }
+    }), callback );
+  }
+
   showAlert ( context, callback ) {
     this.websocket.send( JSON.stringify({
       event   : 'showAlert',

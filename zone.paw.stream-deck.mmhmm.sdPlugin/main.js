@@ -40,6 +40,9 @@ function connectElgatoStreamDeckSocket( inPort, inPluginUUID, inRegisterEvent, i
         button.state    = message.payload.state;
         button.settings = message.payload.settings;
         logger.debug( 'didReceiveSettings: buttons: %o', buttons );
+        if ( typeof button.api.setImage == 'function' ) {
+          button.api.setImage( button.settings );
+        }
         button.api.updateState( button.settings );
         break;
       case 'didReceiveGlobalSettings':
@@ -60,6 +63,9 @@ function connectElgatoStreamDeckSocket( inPort, inPluginUUID, inRegisterEvent, i
           api      : new actions[ action ]( streamDeck, message.context )
         };
         logger.debug( 'willAppear: buttons: %o', buttons );
+        if ( typeof button.api.setImage == 'function' ) {
+          button.api.setImage( button.settings );
+        }
         button.api.updateState( button.settings );
         break;
       case 'willDisappear':
