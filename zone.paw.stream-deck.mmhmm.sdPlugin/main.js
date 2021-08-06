@@ -9,6 +9,8 @@ const actions = {
   'hide'   : require( './actions/hide' ),
   'scene'  : require( './actions/scene' ),
   'slides' : require( './actions/slides' ),
+  'next'   : require( './actions/next' ),
+  'prev'   : require( './actions/prev' ),
 };
 
 var buttons = {};

@@ -1,0 +1,22 @@
+ObjC.import( 'Cocoa' );
+var args = ObjC.deepUnwrap( $.NSProcessInfo.processInfo.arguments ).slice( 4 );
+
+(( click = false ) => {
+  var app = Application( 'mmhmm.app' );
+  if ( ! app.running() ) {
+    return;
+  }
+  try {
+    var sys  = Application( 'System Events' );
+    var proc = sys.processes.byName( 'mmhmm' );
+    var win  = proc.windows.whose({ description: 'standard window' })[0];
+
+    var prev = win.groups.byName( 'Slides' ).groups[0].groups[0].buttons.whose({
+      help: 'Show the previous slide (←)'
+    })[0];
+    if ( click ) {
+      prev.click();
+    }
+    return prev.enabled();
+  } catch ( e ) {}
+}).apply( this, args );

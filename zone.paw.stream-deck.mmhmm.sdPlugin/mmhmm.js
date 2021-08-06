@@ -70,6 +70,30 @@ class mmhmm {
       });
     });
   }
+
+  next ( click = false ) {
+    return new Promise(( resolve ) => {
+      osascript( 'JXA/next.jxa', {
+        args: ( click ? [ click ] : [] )
+      }, ( err, data ) => {
+        var state = utils.primitiveEval( data );
+        logger.debug( 'mmhmm: next: %d', state );
+        resolve( state );
+      });
+    });
+  }
+
+  prev ( click = false ) {
+    return new Promise(( resolve ) => {
+      osascript( 'JXA/prev.jxa', {
+        args: ( click ? [ click ] : [] )
+      }, ( err, data ) => {
+        var state = utils.primitiveEval( data );
+        logger.debug( 'mmhmm: prev: %d', state );
+        resolve( state );
+      });
+    });
+  }
 }
 
 module.exports = new mmhmm();
