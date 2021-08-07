@@ -7,9 +7,12 @@ var args = ObjC.deepUnwrap( $.NSProcessInfo.processInfo.arguments ).slice( 4 );
     return;
   }
   try {
-    var sys   = Application( 'System Events' );
-    var proc  = sys.processes.byName( 'mmhmm' );
-    var win   = proc.windows.whose({ description: 'standard window' })[0];
+    var sys  = Application( 'System Events' );
+    var proc = sys.processes.byName( 'mmhmm' );
+    var win  = proc.windows[0];
+    if ( proc.windows.length > 1 ) {
+      win = proc.windows.whose({ description: 'standard window' })[0];
+    }
     var group = win.groups.whose({ description: 'Inspectors' })[0];
     group.checkboxes.byName( 'Presenter' ).click();
 

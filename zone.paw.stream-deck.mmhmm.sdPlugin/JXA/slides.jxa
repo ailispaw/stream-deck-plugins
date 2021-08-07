@@ -9,7 +9,10 @@ var args = ObjC.deepUnwrap( $.NSProcessInfo.processInfo.arguments ).slice( 4 );
   try {
     var sys  = Application( 'System Events' );
     var proc = sys.processes.byName( 'mmhmm' );
-    var win  = proc.windows.whose({ description: 'standard window' })[0];
+    var win  = proc.windows[0];
+    if ( proc.windows.length > 1 ) {
+      win = proc.windows.whose({ description: 'standard window' })[0];
+    }
     if ( click ) {
       var mode = win.groups.byName( 'Slides' ).groups[0].radioGroups[0].radioButtons.byName( mode_name );
       mode.click();

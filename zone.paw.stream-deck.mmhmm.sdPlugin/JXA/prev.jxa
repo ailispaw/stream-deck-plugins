@@ -9,7 +9,10 @@ var args = ObjC.deepUnwrap( $.NSProcessInfo.processInfo.arguments ).slice( 4 );
   try {
     var sys  = Application( 'System Events' );
     var proc = sys.processes.byName( 'mmhmm' );
-    var win  = proc.windows.whose({ description: 'standard window' })[0];
+    var win  = proc.windows[0];
+    if ( proc.windows.length > 1 ) {
+      win = proc.windows.whose({ description: 'standard window' })[0];
+    }
 
     var prev = win.groups.byName( 'Slides' ).groups[0].groups[0].buttons.whose({
       help: 'Show the previous slide (←)'
