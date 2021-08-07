@@ -19,16 +19,27 @@ var args = ObjC.deepUnwrap( $.NSProcessInfo.processInfo.arguments ).slice( 4 );
   try {
     var sys  = Application( 'System Events' );
     var proc = sys.processes.byName( 'mmhmm' );
-    var win  = proc.windows[0];
+    var win  = proc.windows[0]; // minimized or hidden
     if ( proc.windows.length > 1 ) {
       win = proc.windows.whose({ description: 'standard window' })[0];
     }
     if ( click && ( win.name() != name ) ) {
+      if ( win.attributes.byName( 'AXMinimized' ).value() ) {
+        app.launch();
+      } else {
+        app.activate();
+      }
+      if ( proc.windows.length > 1 ) { // except hidden
+        win = proc.windows.whose({ description: 'standard window' })[0];
+      }
       var scene = win.tabGroups.byName( 'Tab Bar' ).radioButtons.byName( name );
       var pos   = scene.position();
       var size  = scene.size();
       var utils = require( rootDir + '/JXA/utils.jxa' );
       utils.click( app, pos[0] + ( size[0] / 2 ), pos[1] + ( size[1] / 2 ) );
+    }
+    if ( proc.windows.length > 1 ) { // in the case of hidden
+      win = proc.windows.whose({ description: 'standard window' })[0];
     }
     return ( win.name() == name );
   } catch ( e ) {}
