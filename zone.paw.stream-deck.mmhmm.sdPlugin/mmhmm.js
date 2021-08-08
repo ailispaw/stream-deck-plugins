@@ -1,11 +1,11 @@
-const osascript = require( 'osascript' ).file;
+const osascript = require( 'osascript' );
 const logger    = require( './logger' );
 const utils     = require( './utils' );
 
 class mmhmm {
   running () {
     return new Promise( resolve => {
-      osascript( 'JXA/running.jxa', ( err, data ) => {
+      osascript.eval( 'Application( "mmhmm.app" ).running();', ( err, data ) => {
         var running = utils.primitiveEval( data );
         logger.debug( 'mmhmm: running: %s', running );
         resolve( running );
@@ -15,7 +15,7 @@ class mmhmm {
 
   state () {
     return new Promise( resolve => {
-      osascript( 'JXA/state.jxa', ( err, data ) => {
+      osascript.file( 'JXA/state.jxa', ( err, data ) => {
         var state = JSON.parse( data );
         logger.debug( 'mmhmm: state: %o', state );
         resolve( state );
@@ -25,7 +25,7 @@ class mmhmm {
 
   away ( click = false ) {
     return new Promise( resolve => {
-      osascript( 'JXA/away.jxa', {
+      osascript.file( 'JXA/away.jxa', {
         args: ( click ? [ click ] : [] )
       }, ( err, data ) => {
         var away = utils.primitiveEval( data );
@@ -37,7 +37,7 @@ class mmhmm {
 
   hide ( click = false ) {
     return new Promise(( resolve ) => {
-      osascript( 'JXA/hide.jxa', {
+      osascript.file( 'JXA/hide.jxa', {
         args: ( click ? [ click ] : [] )
       }, ( err, data ) => {
         var hiding = utils.primitiveEval( data );
@@ -49,7 +49,7 @@ class mmhmm {
 
   scene ( name, click = false ) {
     return new Promise(( resolve ) => {
-      osascript( 'JXA/scene.jxa', {
+      osascript.file( 'JXA/scene.jxa', {
         args: ( click ? [ name, click, __dirname ] : [ name ] )
       }, ( err, data ) => {
         var scene = utils.primitiveEval( data );
@@ -61,7 +61,7 @@ class mmhmm {
 
   slides ( mode, click = false ) {
     return new Promise(( resolve ) => {
-      osascript( 'JXA/slides.jxa', {
+      osascript.file( 'JXA/slides.jxa', {
         args: ( click ? [ mode, click ] : [ mode ] )
       }, ( err, data ) => {
         var state = utils.primitiveEval( data );
@@ -73,7 +73,7 @@ class mmhmm {
 
   next ( click = false ) {
     return new Promise(( resolve ) => {
-      osascript( 'JXA/next.jxa', {
+      osascript.file( 'JXA/next.jxa', {
         args: ( click ? [ click ] : [] )
       }, ( err, data ) => {
         var state = utils.primitiveEval( data );
@@ -85,7 +85,7 @@ class mmhmm {
 
   prev ( click = false ) {
     return new Promise(( resolve ) => {
-      osascript( 'JXA/prev.jxa', {
+      osascript.file( 'JXA/prev.jxa', {
         args: ( click ? [ click ] : [] )
       }, ( err, data ) => {
         var state = utils.primitiveEval( data );
