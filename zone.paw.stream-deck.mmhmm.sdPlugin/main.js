@@ -92,9 +92,8 @@ function connectElgatoStreamDeckSocket( inPort, inPluginUUID, inRegisterEvent, i
         break;
       case 'applicationDidTerminate':
         stateObserver.stop();
-        Object.keys( buttons ).forEach( async ( context ) => {
+        Object.keys( buttons ).forEach(( context ) => {
           buttons[ context ].api.disable();
-          await utils.sleep( 500 );
         });
         break;
       case 'systemDidWakeUp':
@@ -137,9 +136,8 @@ function connectElgatoStreamDeckSocket( inPort, inPluginUUID, inRegisterEvent, i
       }
       if ( Object.keys( buttons ).length ) {
         mmhmm.state().then(( state ) => {
-          Object.keys( buttons ).forEach( async ( context ) => {
+          Object.keys( buttons ).forEach(( context ) => {
             buttons[ context ].api.setState( state[ buttons[ context ].action ], buttons[ context ].settings );
-            await utils.sleep( 500 );
           });
         });
       }
