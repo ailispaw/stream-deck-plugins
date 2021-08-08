@@ -24,7 +24,7 @@ const BUTTONS = Object.freeze({
 class StreamDeckActionSlides {
   #streamDeck;
   #context;
-  #state;
+  #state = null;
 
   constructor ( streamDeck, context ) {
     this.#streamDeck = streamDeck;

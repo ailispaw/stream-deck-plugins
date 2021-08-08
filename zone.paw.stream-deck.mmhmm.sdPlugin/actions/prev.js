@@ -9,7 +9,7 @@ const STATE = Object.freeze({
 class StreamDeckActionPrev {
   #streamDeck;
   #context;
-  #state;
+  #state = null;
 
   constructor ( streamDeck, context ) {
     this.#streamDeck = streamDeck;
