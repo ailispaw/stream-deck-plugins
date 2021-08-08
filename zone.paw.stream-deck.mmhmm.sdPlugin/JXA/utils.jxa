@@ -5,12 +5,9 @@ module.exports = {
     delay( 0.1 );
     app = Application.currentApplication();
     app.includeStandardAdditions = true;
-    var bounds = app.runScript(`
-      use scripting additions
-      use framework "AppKit"
-      frame() of firstObject() of screens() of NSScreen of current application
-    `);
+    var mainScreen = $.CGMainDisplayID();
+    var height = $.CGDisplayPixelsHigh( mainScreen );
     app.doShellScript( '/usr/local/bin/cliclick c:=' + app.round( x ) + ',=' + app.round( y ) );
-    app.doShellScript( '/usr/local/bin/cliclick m:=' + app.round( mouseLoc.x ) + ',=' + app.round( bounds[1][1] - mouseLoc.y ) );
+    app.doShellScript( '/usr/local/bin/cliclick m:=' + app.round( mouseLoc.x ) + ',=' + app.round( height - mouseLoc.y ) );
   }
 };
