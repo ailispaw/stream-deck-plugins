@@ -129,16 +129,15 @@ function connectElgatoStreamDeckSocket( inPort, inPluginUUID, inRegisterEvent, i
       }
     },
 
-    updateState: function ( continuous = false ) {
+    updateState: async function ( continuous = false ) {
       if ( this.timer && continuous ) {
         clearTimeout( this.timer );
         this.timer = null;
       }
       if ( Object.keys( buttons ).length ) {
-        mmhmm.state().then(( state ) => {
-          Object.keys( buttons ).forEach(( context ) => {
-            buttons[ context ].api.setState( state[ buttons[ context ].action ], buttons[ context ].settings );
-          });
+        const state = await mmhmm.state();
+        Object.keys( buttons ).forEach(( context ) => {
+          buttons[ context ].api.setState( state[ buttons[ context ].action ], buttons[ context ].settings );
         });
       }
       if ( this.observing && continuous ) {
