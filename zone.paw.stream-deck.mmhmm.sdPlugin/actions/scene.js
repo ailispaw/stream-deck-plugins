@@ -9,6 +9,7 @@ const STATE = Object.freeze({
 class StreamDeckActionScene {
   #streamDeck;
   #context;
+  #state;
 
   constructor ( streamDeck, context ) {
     this.#streamDeck = streamDeck;
@@ -18,6 +19,10 @@ class StreamDeckActionScene {
   setState ( active_scene, settings ) {
     if ( active_scene !== undefined ) {
       var state = ( settings.scene_name == active_scene );
+      if ( this.#state === state ) {
+        return;
+      }
+      this.#state = state;
       this.#streamDeck.setState( this.#context, ( state ? STATE.ON_AIR : STATE.OFF_AIR ) );
     } else {
       this.disable();
@@ -32,6 +37,10 @@ class StreamDeckActionScene {
   }
 
   disable () {
+    if ( this.#state === undefined ) {
+      return;
+    }
+    this.#state = undefined;
     this.#streamDeck.setState( this.#context, STATE.DISABLED );
   }
 

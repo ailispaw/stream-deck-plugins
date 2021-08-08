@@ -24,6 +24,7 @@ const BUTTONS = Object.freeze({
 class StreamDeckActionSlides {
   #streamDeck;
   #context;
+  #state;
 
   constructor ( streamDeck, context ) {
     this.#streamDeck = streamDeck;
@@ -38,6 +39,10 @@ class StreamDeckActionSlides {
   setState ( active_mode, settings ) {
     if ( active_mode !== undefined ) {
       var state = ( settings.slides_mode == active_mode );
+      if ( this.#state === state ) {
+        return;
+      }
+      this.#state = state;
       this.#streamDeck.setState( this.#context, ( state ? STATE.ON_AIR : STATE.OFF_AIR ) );
     } else {
       this.disable();
@@ -52,6 +57,10 @@ class StreamDeckActionSlides {
   }
 
   disable () {
+    if ( this.#state === undefined ) {
+      return;
+    }
+    this.#state = undefined;
     this.#streamDeck.setState( this.#context, STATE.DISABLED );
   }
 

@@ -9,6 +9,7 @@ const STATE = Object.freeze({
 class StreamDeckActionNext {
   #streamDeck;
   #context;
+  #state;
 
   constructor ( streamDeck, context ) {
     this.#streamDeck = streamDeck;
@@ -17,6 +18,10 @@ class StreamDeckActionNext {
 
   setState ( state, settings ) {
     if ( state !== undefined ) {
+      if ( this.#state === state ) {
+        return;
+      }
+      this.#state = state;
       this.#streamDeck.setState( this.#context, ( state ? STATE.ENABLED : STATE.NO_SLIDE ) );
     } else {
       this.disable();
@@ -31,6 +36,10 @@ class StreamDeckActionNext {
   }
 
   disable () {
+    if ( this.#state === undefined ) {
+      return;
+    }
+    this.#state = undefined;
     this.#streamDeck.setState( this.#context, STATE.DISABLED );
   }
 
