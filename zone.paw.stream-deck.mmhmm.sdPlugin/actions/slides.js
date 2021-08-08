@@ -36,10 +36,10 @@ class StreamDeckActionSlides {
     this.#streamDeck.setImage( this.#context, STATE.ON_AIR,  BUTTONS[ settings.slides_mode ][ STATE.ON_AIR ] );
   }
 
-  setState ( active_mode, settings ) {
+  setState ( active_mode, settings, force = false ) {
     if ( active_mode !== undefined ) {
       var state = ( settings.slides_mode == active_mode );
-      if ( this.#state === state ) {
+      if ( ( ! force ) && ( this.#state === state)  ) {
         return;
       }
       this.#state = state;
@@ -67,7 +67,7 @@ class StreamDeckActionSlides {
   onKeyUp ( settings ) {
     var self = this;
     mmhmm.slides( settings.slides_mode, true ).then(( state ) => {
-      self.setState( ( state ? settings.slides_mode : state ), settings );
+      self.setState( ( state ? settings.slides_mode : state ), settings, true  );
       if ( state === undefined ) {
         self.#streamDeck.showAlert( self.#context );
       }

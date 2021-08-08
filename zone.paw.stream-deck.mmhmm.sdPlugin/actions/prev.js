@@ -16,9 +16,9 @@ class StreamDeckActionPrev {
     this.#context    = context;
   }
 
-  setState ( state, settings ) {
+  setState ( state, settings, force = false ) {
     if ( state !== undefined ) {
-      if ( this.#state === state ) {
+      if ( ( ! force ) && ( this.#state === state)  ) {
         return;
       }
       this.#state = state;
@@ -46,7 +46,7 @@ class StreamDeckActionPrev {
   onKeyUp ( settings ) {
     var self = this;
     mmhmm.prev( true ).then(( state ) => {
-      self.setState( state, settings );
+      self.setState( state, settings, true  );
       if ( state === undefined ) {
         self.#streamDeck.showAlert( self.#context );
       }
