@@ -1,8 +1,8 @@
 const mmhmm = require( '../mmhmm' );
 
 const STATE = Object.freeze({
-  NO_SLIDE : 0,
-  ENABLED  : 1,
+  ENABLED  : 0,
+  NO_SLIDE : 1,
   DISABLED : 2
 });
 

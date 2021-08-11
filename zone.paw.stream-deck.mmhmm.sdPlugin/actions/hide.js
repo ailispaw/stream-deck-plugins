@@ -1,8 +1,8 @@
 const mmhmm = require( '../mmhmm' );
 
 const STATE = Object.freeze({
-  HIDING   : 0,
-  SHOWING  : 1,
+  SHOWING  : 0,
+  HIDING   : 1,
   DISABLED : 2
 });
 

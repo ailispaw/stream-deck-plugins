@@ -1,23 +1,23 @@
 const mmhmm = require( '../mmhmm' );
 
 const STATE = Object.freeze({
-  OFF_AIR  : 0,
-  ON_AIR   : 1,
+  ON_AIR   : 0,
+  OFF_AIR  : 1,
   DISABLED : 2
 });
 
 const BUTTONS = Object.freeze({
   'Slides off' : {
-    0 : __dirname + '/../images/buttons/off-off-72@2x.png',
-    1 : __dirname + '/../images/buttons/off-on-72@2x.png'
+    0 : __dirname + '/../images/buttons/off-on-72@2x.png',
+    1 : __dirname + '/../images/buttons/off-off-72@2x.png'
   },
   'Shoulder' : {
-    0 : __dirname + '/../images/buttons/shoulder-off-72@2x.png',
-    1 : __dirname + '/../images/buttons/shoulder-on-72@2x.png'
+    0 : __dirname + '/../images/buttons/shoulder-on-72@2x.png',
+    1 : __dirname + '/../images/buttons/shoulder-off-72@2x.png'
   },
   'Full' : {
-    0 : __dirname + '/../images/buttons/full-off-72@2x.png',
-    1 : __dirname + '/../images/buttons/full-on-72@2x.png'
+    0 : __dirname + '/../images/buttons/full-on-72@2x.png',
+    1 : __dirname + '/../images/buttons/full-off-72@2x.png'
   },
 });
 

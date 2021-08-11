@@ -5,14 +5,14 @@
       "Name": "Toggle Virtual Camera",
       "States": [
         {
-          "Image": "images/buttons/away-off-72",
-          "Name": "Off Air",
-          "Title": "Off Air"
-        },
-        {
           "Image": "images/buttons/away-on-72",
           "Name": "On Air",
           "Title": "On Air"
+        },
+        {
+          "Image": "images/buttons/away-off-72",
+          "Name": "Off Air",
+          "Title": "Off Air"
         },
         {
           "Image": "images/buttons/disabled-72",
@@ -29,14 +29,14 @@
       "Name": "Toggle Presenter Opacity",
       "States": [
         {
-          "Image": "images/buttons/hide-off-72",
-          "Name": "Hiding",
-          "Title": "Hiding"
-        },
-        {
           "Image": "images/buttons/hide-on-72",
           "Name": "Showing",
           "Title": "Showing"
+        },
+        {
+          "Image": "images/buttons/hide-off-72",
+          "Name": "Hiding",
+          "Title": "Hiding"
         },
         {
           "Image": "images/buttons/disabled-72",
@@ -54,13 +54,13 @@
       "PropertyInspectorPath": "sdpi/scene.html",
       "States": [
         {
-          "Image": "images/buttons/scene-off-72",
-          "Name": "Off Air",
+          "Image": "images/buttons/scene-on-72",
+          "Name": "On Air",
           "Title": "Scene"
         },
         {
-          "Image": "images/buttons/scene-on-72",
-          "Name": "On Air",
+          "Image": "images/buttons/scene-off-72",
+          "Name": "Off Air",
           "Title": "Scene"
         },
         {
@@ -79,13 +79,13 @@
       "PropertyInspectorPath": "sdpi/slides.html",
       "States": [
         {
-          "Image": "images/buttons/off-off-72",
-          "Name": "Off Air",
+          "Image": "images/buttons/off-on-72",
+          "Name": "On Air",
           "Title": "Slides Mode"
         },
         {
-          "Image": "images/buttons/off-on-72",
-          "Name": "On Air",
+          "Image": "images/buttons/off-off-72",
+          "Name": "Off Air",
           "Title": "Slides Mode"
         },
         {
@@ -103,13 +103,13 @@
       "Name": "Show Next Slide",
       "States": [
         {
-          "Image": "images/buttons/next-off-72",
-          "Name": "No Next Slide",
+          "Image": "images/buttons/next-on-72",
+          "Name": "Next Slide",
           "Title": "Next"
         },
         {
-          "Image": "images/buttons/next-on-72",
-          "Name": "Next Slide",
+          "Image": "images/buttons/next-off-72",
+          "Name": "No Next Slide",
           "Title": "Next"
         },
         {
@@ -127,13 +127,13 @@
       "Name": "Show Previous Slide",
       "States": [
         {
-          "Image": "images/buttons/prev-off-72",
-          "Name": "No Previous Slide",
+          "Image": "images/buttons/prev-on-72",
+          "Name": "Previous Slide",
           "Title": "Previous"
         },
         {
-          "Image": "images/buttons/prev-on-72",
-          "Name": "Previous Slide",
+          "Image": "images/buttons/prev-off-72",
+          "Name": "No Previous Slide",
           "Title": "Previous"
         },
         {
