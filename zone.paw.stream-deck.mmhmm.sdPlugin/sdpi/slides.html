@@ -29,6 +29,9 @@
         var slides_mode = document.getElementById( 'slides_mode' );
         slides_mode.value = settings.slides_mode || 'Slides off';
         console.debug( 'pi_init: slides_mode:', slides_mode.value );
+        setSettings({
+          slides_mode: slides_mode.value
+        });
       }
     </script>
   </body>
