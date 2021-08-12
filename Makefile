@@ -9,7 +9,7 @@ all: $(PLUGINS)
 $(PLUGINS): % : output/$(DOMAIN).%.streamDeckPlugin
 
 output/%.streamDeckPlugin: %.sdPlugin | output
-	StreamDeckDistributionTool --build --input $< --output output
+	DistributionTool --build --input $< --output output
 
 install: $(OUTPUTS)
 	open $<
