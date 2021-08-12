@@ -155,7 +155,7 @@
   "Icon": "images/icons/mmhmm-72",
   "Name": "mmhmm.app",
   "URL": "https://github.com/ailispaw/stream-deck",
-  "Version": "0.1",
+  "Version": "1.0",
   "SDKVersion": 2,
   "OS": [{
     "Platform": "mac",
