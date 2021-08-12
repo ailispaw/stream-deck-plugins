@@ -32,8 +32,10 @@ class StreamDeckActionSlides {
   }
 
   setImage ( settings ) {
-    this.#streamDeck.setImage( this.#context, STATE.OFF_AIR, BUTTONS[ settings.slides_mode ][ STATE.OFF_AIR ] );
-    this.#streamDeck.setImage( this.#context, STATE.ON_AIR,  BUTTONS[ settings.slides_mode ][ STATE.ON_AIR ] );
+    if ( settings.slides_mode && BUTTONS[ settings.slides_mode ] ) {
+      this.#streamDeck.setImage( this.#context, STATE.OFF_AIR, BUTTONS[ settings.slides_mode ][ STATE.OFF_AIR ] );
+      this.#streamDeck.setImage( this.#context, STATE.ON_AIR,  BUTTONS[ settings.slides_mode ][ STATE.ON_AIR ] );
+    }
   }
 
   setState ( active_mode, settings, force = false ) {
